@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  # MongoDB service
+  mongo_db:
+    container_name: db_container
+    image: mongo:6.0
+    restart: always
+    # volumes persists db data even after shutdown/restart
+    volumes:
+      - mongo_db:/data/db
+
+  # Node api service
+  api:
+    build: .
+    ports:
+      - 6060:6060
+    environment:
+      PORT: 6060
+      mongoURI: mongodb://mongo_db:27017/code_memoirs
+    depends_on:
+      - mongo_db
+
+volumes:
+  mongo_db: {}
